@@ -5,27 +5,36 @@ client = InferenceClient(
     api_key=os.environ["HF_TOKEN"],
 )
 
-questionOne = input("What is your favourite movie, and why?: ")
-questionTwo= input("What is your genre?: ")
-questionThree = input("Who is your favourite director?: ")
-questionFour = input("Who is your favourite actor(s): ")
-questionFive = input("Do you want something mainstream, or something, niche😏? (Pick one of the two options): ")
-questionSix = input("Do you want something in english, or foreign? (Pick one of the two options): ")
-questionSeven = input("Do you want something old, or something more recent, or maybe something in between?: ")
-questionEight = input("Do you something long, medium, or short runtime?: ")
+q1 = "What is your favourite movie, and why?: "
+q2 = "What is your favourite genre?: "
+q3 = "Who is your favourite director?: "
+q4 = "Who is your favourite actor(s): "
+q5 = "Do you want something mainstream, or something, niche😏? (Pick one of the two options): "
+q6 = "Do you want something in english, or foreign? (Pick one of the two options): "
+q7 = "Do you want something old, or something more recent, or maybe something in between?: "
+q8 = "Do you want something long, medium, or short runtime?: "
 
-questions = [f"What is your favourite movie, and why?: {questionOne}", 
-             f"What is your genre?: : {questionTwo}", 
-             f"Who is your favourite director?: {questionThree}", 
-             f"Who is your favourite actor(s)?: {questionFour}", 
-             f"Do you want something mainstream, or something, niche? (Pick one of the two options): {questionFive}",
-             f"Do you want something in english, or something foriegn? (Pick one of the two options): {questionSix}",
-             f"Do you want something old, or something more recent, or maybe something in between?: {questionSeven}",
-             f"Do you something long, medium, or short runtime?: {questionEight}"
+q1Response = input(q1)
+q2Response = input(q2)
+q3Response = input(q3)
+q4Response = input(q4)
+q5Response = input(q5)
+q6Response = input(q6)
+q7Response = input(q7)
+q8Response = input(q8)
+
+questions = [f"{q1} {q1Response}", 
+             f"{q2} {q2Response}", 
+             f"{q3} {q3Response}", 
+             f"{q4} {q4Response}", 
+             f"{q5} {q5Response}",
+             f"{q6} {q6Response}",
+             f"{q7} {q7Response}",
+             f"{q8} {q8Response}"
             ]
 
 completion = client.chat.completions.create(
-    model="deepseek-ai/DeepSeek-V3.2:novita",
+    model="deepseek-ai/DeepSeek-R1:novita",
     messages=[
         {
             "role": "user",
@@ -36,7 +45,7 @@ completion = client.chat.completions.create(
             inappropiately (e.g answering neither to (Do you want something mainstream, or something, niche? (Pick one of the two options)), or, answering with swear words or \
             unrelated terms. Do not under any circumstance make up a movie." 
         }
-    ],
+    ]
 )
 
 print(completion.choices[0].message.content)
