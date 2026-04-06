@@ -1,5 +1,6 @@
 import os
 from huggingface_hub import InferenceClient
+from chunking import chunks
 
 client = InferenceClient(
     api_key=os.environ["HF_TOKEN"],
