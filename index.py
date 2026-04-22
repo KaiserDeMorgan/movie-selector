@@ -1,7 +1,11 @@
 import os
+import requests
+import json
 from huggingface_hub import InferenceClient
+from supabase import create_client, Client
 from chunking import chunks
 
+# Input Part
 client = InferenceClient(
     api_key=os.environ["HF_TOKEN"],
 )
@@ -48,5 +52,27 @@ completion = client.chat.completions.create(
         }
     ]
 )
-
 print(completion.choices[0].message.content)
+
+#Embeddings and Database part
+supabase: Client = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_KEY"])
+
+for chunk in chunks:
+    response = requests.post(
+        url="https://openrouter.ai/api/v1/embeddings",
+        headers={
+            "Authorization": f"Bearer {os.environ['OPENROUTER_KEY']}",
+            "Content-Type": "application/json",
+        },
+        data=json.dumps({
+            "model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+            "input": chunk.page_content,
+            "encoding_format": "float"
+        })
+    )
+    embedding = response.json()["data"][0]["embedding"]
+    supabase.table("documents").insert({
+        "title": chunk.metadata.get("source", "movie_dataset_clean"),
+        "body": chunk.page_content,
+        "embedding": embedding
+    }).execute()
